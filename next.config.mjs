@@ -6,6 +6,9 @@ const projectRoot = dirname(fileURLToPath(import.meta.url));
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Static export for ButterBase static hosting (serves the out/ folder).
+  output: "export",
+  images: { unoptimized: true },
   // Pin the workspace root — a stray lockfile in $HOME otherwise misleads
   // Turbopack's root inference (multiple-lockfiles warning).
   turbopack: {
