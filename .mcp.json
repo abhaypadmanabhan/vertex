@@ -1,0 +1,4 @@
+{
+  "_comment": "Placeholder. Three MCP servers to add before Phase 0 work starts: butterbase (ButterBase app spine — Postgres, auth, model gateway, frontend deploy), neo4j (shared graph — Company/Fund/Person/Tech/Market), rocketride (enrichment .pipe endpoint).",
+  "mcpServers": {}
+}
