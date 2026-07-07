@@ -62,8 +62,8 @@ async function exaSearch(name: string, apiKey: string): Promise<{ context: strin
     body: JSON.stringify({
       query: `${name} company — what they do, founders, funding, investors, tech stack, market`,
       type: "auto",
-      numResults: 6,
-      contents: { text: { maxCharacters: 1200 } },
+      numResults: 5,
+      contents: { text: { maxCharacters: 1000 } },
     }),
   });
   if (!res.ok) {
@@ -121,7 +121,7 @@ export default async function handler(req: Request, ctx: any): Promise<Response>
         },
       ],
       max_tokens: 1500,
-      temperature: 0.2,
+      temperature: 1, // Kimi K2.5 only accepts temperature=1
       response_format: { type: "json_object" },
     }),
   });
