@@ -1,26 +1,32 @@
 import { cn } from "@/components/lib/utils";
 
 /**
- * Vertex signature mark — an editorial corner bracket (a "frame/handle", padzy
- * bracket motif). Deliberately NOT a graph node or geometric apex: the product
- * IS a graph, so a node logo would be the cliché. Placeholder until the final
- * logo image is dropped in. Inherits `currentColor`.
+ * Vertex mark — two interlocking right-angle brackets forming an offset frame
+ * (an "aperture" that reads as focus/framing, not a graph node). Reproduced as
+ * vector from the returned logo so it stays crisp and inherits `currentColor`.
  */
 export function Signature({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 14 16"
+      viewBox="0 0 100 100"
       fill="none"
       aria-hidden
       className={cn("h-4 w-auto", className)}
     >
+      {/* Upper-left bracket. */}
       <path
-        d="M13 1H1v14"
+        d="M26 70V26H70"
         stroke="currentColor"
-        strokeWidth="1.5"
+        strokeWidth="12"
         strokeLinecap="square"
       />
-      <path d="M5.5 8.5h7" stroke="currentColor" strokeWidth="1.5" />
+      {/* Lower-right bracket, offset to interlock. */}
+      <path
+        d="M74 30V74H30"
+        stroke="currentColor"
+        strokeWidth="12"
+        strokeLinecap="square"
+      />
     </svg>
   );
 }

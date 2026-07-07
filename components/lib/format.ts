@@ -36,3 +36,23 @@ export function abbreviate(n: number): string {
 export function pad2(n: number): string {
   return String(n).padStart(2, "0");
 }
+
+/** Report timestamp: `2026-07-07 14:32:11 UTC`. */
+export function formatStamp(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  const p = (n: number) => String(n).padStart(2, "0");
+  return (
+    `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())} ` +
+    `${p(d.getUTCHours())}:${p(d.getUTCMinutes())}:${p(d.getUTCSeconds())} UTC`
+  );
+}
+
+/** Deterministic display id from a seed, e.g. `VTX-4K2P9`. Presentation only. */
+export function reportId(seed: string): string {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) {
+    h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  }
+  return `VTX-${h.toString(36).toUpperCase().padStart(5, "0").slice(0, 5)}`;
+}

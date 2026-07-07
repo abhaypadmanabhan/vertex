@@ -26,9 +26,16 @@ const mono = DM_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://vertex.butterbase.dev"),
   title: "Vertex — company intelligence by graph",
   description:
     "Type any company, even one launched days ago. Vertex enriches it live and traverses a shared graph to surface competitors and investor signals by structure, not by guess.",
+  openGraph: {
+    title: "Vertex — company intelligence by graph",
+    description:
+      "Enrich any company live, write it into a shared graph, and rank competitors by shared investors, tech, and markets.",
+    images: [{ url: "/brand/og.png", width: 1720, height: 900 }],
+  },
 };
 
 export default function RootLayout({

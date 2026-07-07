@@ -8,7 +8,7 @@ import { Signature } from "@/components/brand/signature";
  */
 export function Wordmark({
   className,
-  mark = false,
+  mark = true,
   size = "md",
 }: {
   className?: string;

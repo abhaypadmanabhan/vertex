@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, Bookmark, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bookmark, Check } from "lucide-react";
 import type { CompanyReport } from "@lib/types";
 import { Button } from "@/components/ui/button";
 import { Kicker } from "@/components/ui/kicker";
@@ -10,6 +10,19 @@ import { ReportCard } from "@/components/report/report-card";
 import { CompetitorList } from "@/components/report/competitor-list";
 import { InvestorSignalView } from "@/components/report/investor-signal";
 import { GraphViz } from "@/components/report/graph-viz";
+import { formatStamp, reportId } from "@/components/lib/format";
+
+function Signal({ label, value, sub }: { label: string; value: React.ReactNode; sub?: string }) {
+  return (
+    <div className="border-t border-line px-4 py-3 first:border-t-0 sm:border-l sm:border-t-0 sm:first:border-l-0 sm:first:pl-0">
+      <div className="kicker">{label}</div>
+      <div className="mt-1.5 truncate font-mono text-[17px] tabular-nums text-ink">
+        {value}
+      </div>
+      {sub && <div className="mt-0.5 truncate font-mono text-[11px] text-muted">{sub}</div>}
+    </div>
+  );
+}
 
 /** Full results view (#17): report card + ranked competitors + signal + graph. */
 export function ResultsView({
@@ -21,6 +34,14 @@ export function ResultsView({
 }) {
   const { enrichment: e } = report;
   const [saved, setSaved] = useState(false);
+  const [stamp] = useState(() => formatStamp(new Date().toISOString()));
+
+  // Derived signals — all computed from the locked schema, nothing fabricated.
+  const top = report.competitors[0];
+  const edgesMapped = report.competitors.reduce((s, c) => s + c.sharedEdges, 0);
+  const lead = e.funds[0] ?? "—";
+  const peers = report.investorSignal?.coFunded.length ?? 0;
+  const id = reportId(e.name);
 
   return (
     <div className="flex flex-col gap-14 animate-type-settle">
@@ -82,6 +103,19 @@ export function ResultsView({
         </div>
       </header>
 
+      {/* Derived signal strip — real counts from the graph traversal. */}
+      <div className="grid grid-cols-2 border border-line sm:flex sm:border-0 sm:border-t">
+        <Signal label="Competitors" value={report.competitors.length} />
+        <Signal label="Edges mapped" value={edgesMapped} />
+        <Signal
+          label="Top match"
+          value={top ? top.sharedEdges : "—"}
+          sub={top?.name}
+        />
+        <Signal label="Lead investor" value={lead} />
+        <Signal label="Co-funded peers" value={peers} />
+      </div>
+
       <Section index={1} label="Overview" active>
         <ReportCard e={e} />
       </Section>
@@ -102,6 +136,24 @@ export function ResultsView({
       <Section index={4} label="Investor signal">
         <InvestorSignalView signal={report.investorSignal} />
       </Section>
+
+      {/* Report meta + export. */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
+        <div className="flex flex-wrap gap-x-8 gap-y-1 font-mono text-[11px] text-muted">
+          <span>
+            <span className="text-muted/60">REPORT ID </span>
+            {id}
+          </span>
+          <span>
+            <span className="text-muted/60">GENERATED </span>
+            {stamp}
+          </span>
+        </div>
+        <Button size="sm" onClick={() => window.print()}>
+          Export report
+          <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.5} />
+        </Button>
+      </div>
     </div>
   );
 }

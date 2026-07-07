@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Kicker } from "@/components/ui/kicker";
 import { Wordmark } from "@/components/brand/wordmark";
+import { TAGLINE_MONO } from "@/components/brand/constants";
 
 type Mode = "sign-in" | "sign-up";
 
@@ -61,8 +62,9 @@ export function AuthForm({ mode }: { mode: Mode }) {
             competitors by shared investors, tech, and markets.
           </p>
         </div>
-        <div className="font-mono text-[11px] tracking-[0.08em] text-muted">
-          VERTEX · GRAPH-NATIVE INTEL
+        <div className="flex items-center gap-3 font-mono text-[11px] tracking-[0.08em] text-muted">
+          <span aria-hidden className="h-2 w-3 shrink-0 bg-accent" />
+          {TAGLINE_MONO}
         </div>
       </aside>
 

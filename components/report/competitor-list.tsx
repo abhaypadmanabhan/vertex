@@ -37,6 +37,11 @@ export function CompetitorList({ items }: { items: Competitor[] }) {
   const max = Math.max(...items.map((c) => c.sharedEdges), 1);
 
   return (
+    <>
+    <div className="flex items-center justify-between pb-2">
+      <span className="kicker">Rank · Company</span>
+      <span className="kicker">Shared edges</span>
+    </div>
     <ul>
       {items.map((c, i) => (
         <li
@@ -80,5 +85,6 @@ export function CompetitorList({ items }: { items: Competitor[] }) {
         </li>
       ))}
     </ul>
+    </>
   );
 }
