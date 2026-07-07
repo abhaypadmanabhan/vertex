@@ -1,0 +1,19 @@
+{
+  "name": "vertex",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Graph-enrichment company intel. Type any company, enrich live, traverse a shared Neo4j graph for competitors + investor signals.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "seed": "tsx graph/seed.ts"
+  },
+  "dependencies": {
+    "neo4j-driver": "^5.28.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
