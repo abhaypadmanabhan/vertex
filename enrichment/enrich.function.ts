@@ -120,8 +120,12 @@ export default async function handler(req: Request, ctx: any): Promise<Response>
           content: `Company: ${name}\n\nSEARCH CONTEXT:\n${search.context || "(no results found)"}`,
         },
       ],
-      max_tokens: 1500,
-      temperature: 1, // Kimi K2.5 only accepts temperature=1
+      // Kimi K2.5 defaults to thinking mode (slow, reasoning_content eats the
+      // token budget → empty content / timeouts). Extraction needs no reasoning,
+      // so run instant mode: thinking disabled, temp 0.6 (1.0 is thinking-only).
+      thinking: { type: "disabled" },
+      max_tokens: 2000,
+      temperature: 0.6,
       response_format: { type: "json_object" },
     }),
   });
