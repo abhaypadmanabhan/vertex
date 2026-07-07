@@ -1,0 +1,31 @@
+{
+  "version": "1",
+  "description": "Vertex company enrichment: Exa web search -> Claude structured extraction. Output must match shared/enrichment-schema.ts (Enrichment) after JSON.parse.",
+  "components": [
+    {
+      "id": "search",
+      "provider": "search_exa",
+      "name": "Company web search",
+      "config": {
+        "type": "auto",
+        "numResults": 8,
+        "includeHighlights": true,
+        "highlightChars": 800
+      },
+      "input": [
+        { "lane": "questions", "from": "$input" }
+      ]
+    },
+    {
+      "id": "extract",
+      "provider": "llm_anthropic",
+      "name": "Structured extraction",
+      "config": {
+        "profile": "claude-sonnet-4-6"
+      },
+      "input": [
+        { "lane": "questions", "from": "search", "sourceLane": "text" }
+      ]
+    }
+  ]
+}
