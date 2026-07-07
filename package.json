@@ -4,16 +4,31 @@
   "private": true,
   "description": "Graph-enrichment company intel. Type any company, enrich live, traverse a shared Neo4j graph for competitors + investor signals.",
   "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "typecheck": "tsc --noEmit",
     "seed": "tsx graph/seed.ts",
     "test:enrichment": "tsx --test lib/enrichment.test.ts"
   },
   "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.23.0",
     "neo4j-driver": "^5.28.0",
+    "next": "^16.2.10",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tailwind-merge": "^3.6.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.5.2",
+    "postcss": "^8.5.16",
+    "tailwindcss": "^3.4.19",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   }
