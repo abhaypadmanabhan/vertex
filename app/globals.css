@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * VERTEX — padzy-os theme. Cool-dark "intelligence terminal".
+ * One accent (signal amber #FFB020), reserved for active / progress / primary CTA.
+ * Colors are RGB channel triplets so Tailwind alpha modifiers work (see tailwind.config.ts).
+ */
+:root {
+  --ground: 12 14 18; /* #0C0E12 — cool near-black page */
+  --surface: 22 25 31; /* #16191F — elevation via lightness (shadows banned) */
+  --ink: 244 246 248; /* #F4F6F8 — off-white text + structure */
+  --muted: 139 147 161; /* #8B93A1 — secondary text, inactive */
+  --accent: 255 176 32; /* #FFB020 — the single accent */
+}
+
+@layer base {
+  * {
+    border-color: rgb(var(--ink) / 0.1);
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: rgb(var(--ground));
+    color: rgb(var(--ink));
+    font-family: var(--font-sans), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Keyboard focus = crisp 2px accent outline, never a glow (language.md). */
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 2px;
+    border-radius: 0;
+  }
+
+  ::selection {
+    background: rgb(var(--accent) / 0.25);
+    color: rgb(var(--ink));
+  }
+
+  /* Editorial mono numerals align in stacks; Inter numerals get tabular figures. */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--ground));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--ink) / 0.14);
+    border: 2px solid rgb(var(--ground));
+    border-radius: 9999px;
+  }
+}
+
+@layer components {
+  /* Numbered editorial kicker — `01 / OVERVIEW`. */
+  .kicker {
+    font-family: var(--font-mono), monospace;
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(var(--muted));
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 1px hairline rule. Add `.hairline--draw` for the scaleX entrance. */
+  .hairline {
+    height: 1px;
+    width: 100%;
+    background: rgb(var(--ink) / 0.1);
+    border: 0;
+  }
+  .hairline--draw {
+    transform-origin: left;
+    animation: hairline-in 200ms cubic-bezier(0.2, 0, 0, 1) both;
+  }
+
+  /* Inter numerals that stack (tiles, tables) align on the same grid. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Motion is functional and opt-out — one moving thing, never on reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
