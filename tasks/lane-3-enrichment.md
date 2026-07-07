@@ -2,23 +2,33 @@
 
 Owns: `enrichment/` + `lib/enrichment.ts`. Contract out = `shared/enrichment-schema.ts` (Enrichment).
 
-## Reality check (important)
-RocketRide MCP only exposes `RocketRide_Document_Processor(filepath)` — a local-file doc processor,
-NO pipe build/deploy. So the PRD's ".pipe cloud endpoint" is out. **Primary enrichment = ButterBase
-model gateway** (`mcp__butterbase__manage_ai` — configure a model, then invoke it from a ButterBase
-function). This is issue #12 promoted to primary; #9/#10 become a short documented probe.
+## Reality check (verified against docs.butterbase.ai + docs.rocketride.org)
+Two viable enrichment paths. Build the ButterBase one FIRST (unblocked, in-session), then add the
+RocketRide pipe if the user provides an API key.
+
+- **Primary = ButterBase model gateway** (docs confirm: OpenAI-compatible gateway to Claude/GPT).
+  `mcp__butterbase__manage_ai` to configure the model, then `deploy_function` a serverless `enrich`.
+  No external key needed — uses the vertex app. Unblocked now.
+- **RocketRide pipe = REAL but needs your API key + the npm SDK (NOT the connected MCP).** The
+  connected `RocketRide_Document_Processor` MCP tool is only a thin `upload` wrapper. The real path:
+  `npm install rocketride`; env `ROCKETRIDE_APIKEY=<user key>` + `ROCKETRIDE_URI=wss://api.rocketride.ai`;
+  build `enrichment/pipeline.pipe` (JSON: `components` array — a web-search node → an LLM-extract node;
+  get exact provider node names from https://docs.rocketride.org/nodes); invoke via TS SDK:
+  `const c = new RocketRideClient({auth: process.env.ROCKETRIDE_APIKEY!, uri:'https://cloud.rocketride.ai'});
+  await c.connect(); const {token} = await c.use({filepath:'./enrichment/pipeline.pipe'});
+  const r = await c.send(token, name);` (or CLI `rocketride start --pipeline ./enrichment/pipeline.pipe`).
 
 ## Issues
-- **#12 (primary)** Build enrichment via ButterBase model gateway:
-  - Configure model access (`manage_ai`), deploy a ButterBase function `enrich` (`deploy_function`)
-    that takes `{ name }`, prompts the model to web-search + extract, and returns JSON matching
-    `ENRICHMENT_FIELD_HINT`. Use the field hint verbatim in the prompt.
-  - Validate output with `parseEnrichment()` before returning (throw on bad shape). Public sources only.
-- Fill **`lib/enrichment.ts:enrichCompany(name)`** — call the deployed function, `parseEnrichment` the
-  result, return `Enrichment`. Keep the signature exact.
-- **#9/#10 (probe, ~15 min max)** Try `RocketRide_Document_Processor` on a sample company doc; note in
-  `enrichment/README.md` whether it can serve as a web-fetch/extract sub-step. If not, document as
-  deferred. Do not rabbit-hole.
+- **#12 (primary)** ButterBase model-gateway enrichment:
+  - Configure model (`manage_ai`), deploy a ButterBase function `enrich` (`deploy_function`) taking
+    `{ name }`, prompting the model to web-search + extract, returning JSON matching `ENRICHMENT_FIELD_HINT`
+    verbatim. Validate with `parseEnrichment()` before returning. Public sources only.
+- Fill **`lib/enrichment.ts:enrichCompany(name)`** — call the deployed function (or the RocketRide pipe
+  if wired), `parseEnrichment` the result, return `Enrichment`. Keep the signature exact.
+- **#9/#10 (RocketRide pipe)** Author `enrichment/pipeline.pipe` (web-search → llm-extract, provider
+  names from /nodes) so output matches the schema. **Requires the user's RocketRide API key — ASK for
+  it; if not provided, build the .pipe file + wiring but leave the live run for later.** Document in
+  `enrichment/README.md`. Do not rabbit-hole past ~30 min.
 
 ## Prove it (acceptance)
 - The `enrich` function is deployed and callable. Show the deploy result.
