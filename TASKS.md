@@ -6,15 +6,20 @@ frontend built + deployed to https://vertex.butterbase.dev · GitHub pushed · s
 HackwithBay 3.0. Issues #1–17, #20, #22, #24, #25 closed. RocketRide pipe (#9/#10/#11)
 superseded by EXA+Kimi BYOK.
 
-## Phase 2 — Live wiring (issues #26–31, label `phase-2-live`)
-Deployed UI runs on MOCK data; wire it to live enrichment + graph.
-- [ ] #26 Server `report` fn: enrich→upsert→competitors→investor via **Neo4j Aura HTTP Query API**
-      (sandbox has no npm driver). NEEDS Neo4j creds as fn secrets — ask user.
-- [ ] #27 App CORS: allow https://vertex.butterbase.dev + localhost.
-- [ ] #28 Wire `search-experience.tsx` (mockEnrich → fetch `/fn/report`); remove mock.
-- [ ] #29 Optimize Kimi + EXA (<8s; fund NAMES not amounts; tighter prompt; surgical search).
-- [ ] #30 Rebuild static export + redeploy to butterbase.dev; verify live browser search.
-- [ ] #31 Resubmit hackathon entry (version bump).
+## Phase 2 — Live wiring (issues #26–31, label `phase-2-live`) — DONE ✅
+Deployed UI now runs on LIVE enrichment + graph (mock removed).
+- [x] #26 `report` fn: EXA→Kimi enrich (inlined) → upsert + competitors + investor via
+      **Neo4j Aura HTTP Query API** (sandbox has no npm driver). Self-contained; sibling
+      fn-to-fn calls aren't routable from the sandbox, so enrichment is inlined.
+- [x] #27 App CORS: allows https://vertex.butterbase.dev + http://localhost:3000.
+- [x] #28 `search-experience.tsx` fetches `/fn/report` (abortable, run-id guard, error state);
+      `lib/report.ts` browser client; mock enrichment path removed.
+- [x] #29 funds=NAMES, 4 results, 800-char excerpts; dropped livecrawl (14.4s→8.7s).
+- [x] #30 Rebuilt static export + redeployed to butterbase.dev. Verified live from deployed origin.
+- [~] #31 Resubmit NOT needed — same URL serves the live build, app_id already attached (scored live).
+- Security fix: `report` 502s no longer leak upstream error detail (logged server-side only).
+      Accepted demo trade-offs: `report` is public (`auth:none`, no rate-limit) + web content is
+      trusted into the graph — inherent to a static frontend; mitigate post-demo.
 
 ## Still open (pre-P2)
 - [ ] #18 auth screens wiring · #19 per-user history wiring · #21 E2E · #23 Daytona bonus.

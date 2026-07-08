@@ -419,12 +419,14 @@ export default async function handler(req: Request, ctx: any): Promise<Response>
   const auth = `Basic ${btoa(`${NEO4J_USER}:${NEO4J_PASSWORD}`)}`;
 
   // 1. Enrich (EXA web search → Kimi K2.5 extract, inlined).
+  // Error detail is logged server-side only — never returned to the browser
+  // (upstream messages can carry internal host/URL fragments).
   let enrichment: Enrichment;
   try {
     enrichment = await enrichCompany(name, EXA_API_KEY, KIMI_API_KEY, KIMI_MODEL);
   } catch (e: any) {
     console.error("enrich error", e?.message);
-    return json({ error: "enrichment failed", detail: String(e?.message ?? e) }, 502);
+    return json({ error: "enrichment failed" }, 502);
   }
 
   // 2. Upsert into the shared graph (idempotent).
@@ -433,7 +435,7 @@ export default async function handler(req: Request, ctx: any): Promise<Response>
     await runCypher(NEO4J_QUERY_URL, auth, UPSERT_COMPANY_QUERY, buildUpsertParams(enrichment));
   } catch (e: any) {
     console.error("graph upsert failed", e?.message);
-    return json({ error: "graph upsert failed", detail: String(e?.message ?? e) }, 502);
+    return json({ error: "graph upsert failed" }, 502);
   }
 
   // 3. Traverse — competitors + investor signal. A read failure degrades
