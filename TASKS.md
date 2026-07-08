@@ -21,8 +21,17 @@ Deployed UI now runs on LIVE enrichment + graph (mock removed).
       Accepted demo trade-offs: `report` is public (`auth:none`, no rate-limit) + web content is
       trusted into the graph — inherent to a static frontend; mitigate post-demo.
 
-## Still open (pre-P2)
-- [ ] #18 auth screens wiring · #19 per-user history wiring · #21 E2E · #23 Daytona bonus.
+## Phase 3 — Harden & sharpen the live pipeline (label `phase-3`)
+- [ ] #32 [security] Rate-limit + auth the public `report` fn (finding #1).
+- [ ] #33 [security] Guard graph writes against prompt-injection / poisoning (finding #2).
+- [ ] #34 [quality] Enrichment coverage: recover missing funds/investors (EXA index-only gap).
+- [ ] #35 [quality] Grow seed graph for competitor density (edges beyond single-fund overlap).
+- [ ] #36 [ux] Loading-state timing to match live ~8.7s latency (decouple from mock).
+- [ ] #37 [verify] Real-browser E2E on deployed site (Phase 2 curl-only caveat).
+Note: security review reported 4 findings; #3 (error-detail-leak) fixed, summary omitted the 4th — re-run `/security-review`.
+
+## Still open (later phases)
+- [ ] #18 auth screens (phase-4) · #19 per-user history (phase-4) · #21 E2E (phase-5) · #23 Daytona (phase-6).
 
 ## Live resources
 - ButterBase app `app_ukesbu2ssy8a` · api `https://api.butterbase.ai/v1/app_ukesbu2ssy8a`
