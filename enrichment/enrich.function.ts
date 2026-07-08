@@ -40,6 +40,7 @@ Rules:
 - "name" is required; use the company's canonical display name.
 - Use null for any field the context does not support (not empty string, not "unknown").
 - founders/funds/tech/markets are arrays; use [] if none found.
+- "funds" holds investor / fund NAMES only (e.g. "Sequoia", "Y Combinator") — never dollar amounts, round sizes, or dates.
 - "sources" must list the source URLs from the context you actually relied on.
 - Do not fabricate. Prefer null/[] over guessing.`;
 
@@ -62,8 +63,10 @@ async function exaSearch(name: string, apiKey: string): Promise<{ context: strin
     body: JSON.stringify({
       query: `${name} company — what they do, founders, funding, investors, tech stack, market`,
       type: "auto",
-      numResults: 5,
-      contents: { text: { maxCharacters: 1000 } },
+      numResults: 4,
+      // Index-only (no livecrawl): EXA's index already covers days-old companies,
+      // and livecrawl adds ~3s/call. 800-char excerpts keep Kimi's input small.
+      contents: { text: { maxCharacters: 800 } },
     }),
   });
   if (!res.ok) {
