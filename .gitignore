@@ -35,3 +35,7 @@ next-env.d.ts
 
 # Testing
 coverage/
+
+# build artifact zips
+out.zip
+*.zip
